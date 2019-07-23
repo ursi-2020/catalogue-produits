@@ -13,9 +13,8 @@ def index(request):
     return render(request, 'index.html', context)
 
 def info(request):
-    ventes = Vente.objects.all()
     articles = Article.objects.all()
-    context = {'ventes': ventes, 'articles' : articles}
+    context = {'articles' : articles}
     return render(request, 'info.html', context)
 
 def add_article(request):
@@ -32,3 +31,8 @@ def api_info(request):
     ventes = serializers.serialize("json", Vente.objects.all())
     articles = serializers.serialize("json", Article.objects.all())
     return JsonResponse({'ventes' : ventes, 'articles' : articles})
+
+def info_gestion_commerciale(request):
+    #articles = Article.objects.all() TODO: ADD
+    context = {}
+    return render(request, 'info_gestion_commerciale.html', context)

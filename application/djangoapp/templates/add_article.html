@@ -6,7 +6,10 @@
 
 </head>
 <body>
-<h1>Ajouter un article dans la base de données</h1>
+<form action="/">
+    <input type="submit" value="Retour à l'accueil" />
+</form>
+<h1>Ajouter un article dans le catalogue (BDD)</h1>
 <form action="/add-article" method="POST">
 {% csrf_token %}
     <label for="nom_id">Nom</label>

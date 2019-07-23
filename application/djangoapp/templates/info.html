@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+
+</head>
+<body>
+<h2>Ventes</h2>
+{% for vente in ventes %}
+<p>Un(e) {{ vente.article.nom }} a été vendue le {{vente.date|date:"l j F H:i"}}</p>
+{% endfor %}
+<h2>Articles</h2>
+{% for article in articles %}
+<p>Nom : {{ article.nom }} , Stock : {{article.stock}}</p>
+{% endfor %}
+</body>
+</html>

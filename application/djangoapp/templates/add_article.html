@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+
+</head>
+<body>
+<h1>Ajouter un article dans la base de données</h1>
+<form action="/add-article" method="POST">
+{% csrf_token %}
+    <label for="nom_id">Nom</label>
+<input type="text" name="nom" id="nom_id"/>
+    <label for="stock_id">Stock</label>
+    <input type="number" name="stock" id="stock_id"/>
+<input type="submit" value="Valider"/>
+</form>
+</body>
+</html>

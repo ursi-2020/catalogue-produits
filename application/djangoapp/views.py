@@ -28,11 +28,9 @@ def add_article(request):
     return render(request, 'add_article.html', {'form' : form})
 
 def api_info(request):
-    ventes = serializers.serialize("json", Vente.objects.all())
     articles = serializers.serialize("json", Article.objects.all())
-    return JsonResponse({'ventes' : ventes, 'articles' : articles})
+    return JsonResponse({'articles' : articles})
 
 def info_gestion_commerciale(request):
-    #articles = Article.objects.all() TODO: ADD
-    context = {}
+    context = api.send_request('gestioncommerciale', 'api/info')
     return render(request, 'info_gestion_commerciale.html', context)

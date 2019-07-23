@@ -15,3 +15,12 @@ class Vente(models.Model):
 
     def __str__(self):
         return 'Vente: {} - {}'.format(self.article.nom, self.date)
+
+
+class User(models.Model):
+    nom = models.CharField(max_length=200)
+    prenom = models.CharField(max_length=200)
+    age = models.PositiveIntegerField()
+
+    def __str__(self):
+        return 'User: {}'.format(self.nom)

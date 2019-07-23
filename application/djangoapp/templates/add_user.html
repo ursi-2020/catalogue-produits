@@ -9,13 +9,15 @@
 <form action="/">
     <input type="submit" value="Retour à l'accueil" />
 </form>
-<h1>Ajouter un article dans la BDD du catalogue</h1>
-<form action="/add-article" method="POST">
+<h1>Ajouter un utilisateur dans la BDD gestion commerciale</h1>
+<form action="/add-user-gestion-commerciale" method="POST">
 {% csrf_token %}
     <label for="nom_id">Nom</label>
 <input type="text" name="nom" id="nom_id"/>
-    <label for="stock_id">Stock</label>
-    <input type="number" name="stock" id="stock_id"/>
+    <label for="prenom_id">Prénom</label>
+<input type="text" name="prenom" id="prenom_id"/>
+    <label for="age_id">Age</label>
+    <input type="number" name="age" id="age_id"/>
 <input type="submit" value="Valider"/>
 </form>
 </body>

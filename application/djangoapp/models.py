@@ -8,3 +8,12 @@ class Produit(models.Model):
 
     def __str__(self):
         return 'Produit: {}'.format(self.nom)
+
+
+class User(models.Model):
+    nom = models.CharField(max_length=200)
+    prenom = models.CharField(max_length=200)
+    age = models.PositiveIntegerField()
+
+    def __str__(self):
+        return 'User: {}'.format(self.nom)

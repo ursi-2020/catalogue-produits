@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.core import serializers
 from .models import Article
 from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
 import json
 
 def index(request):
@@ -63,14 +64,17 @@ def load_data(json_data):
     return HttpResponse(json.dumps(json_data))
 
 def api_data(request):
-    codeProduit = request.GET.get('codeProduit')
-    if (codeProduit):
-        produit = list(Produit.objects.filter(codeProduit=codeProduit).values())
-        if (len(produit) == 0):
+    id = request.GET.get('id')
+    if (id):
+        # If one article is specified, try to retrieve this one
+        try:
+            produit = Produit.objects.get(id=id)
+        except Produit.DoesNotExist:
             return JsonResponse({'error': 'Code produit invalide ou produit inexistant'}, status=404)
         else:
-            return JsonResponse({'produit': produit[0]})
+            return JsonResponse({'produit' : model_to_dict(produit)})
     else:
+        # If no id is specified, return every product
         produits = list(Produit.objects.all().values())
         return JsonResponse({'produits' : produits})
 

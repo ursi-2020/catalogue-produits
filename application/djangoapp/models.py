@@ -9,8 +9,7 @@ class Produit(models.Model):
     prix = models.PositiveIntegerField()
 
     def __str__(self):
-        return 'Produit: {}'.format(self.codeProduit, self.familleProduit, self.descriptionProduit, self.quantiteMin, self.packaging, self.prix)
-
+        return "{\"codeProduit\":{}, \"familleProduit\":{}, \"descriptionProduit\":{},\"quantiteMin\":{}, \"packaging\":{}, \"prix\":{}}".format(self.codeProduit, self.familleProduit, self.descriptionProduit, self.quantiteMin, self.packaging, self.prix)
 
 class User(models.Model):
     nom = models.CharField(max_length=200)
@@ -33,3 +32,4 @@ class Vente(models.Model):
 
     def __str__(self):
         return 'Vente: {} - {}'.format(self.article.nom, self.date)
+

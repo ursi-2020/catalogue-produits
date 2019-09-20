@@ -10,10 +10,14 @@ from .models import Article
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-
 def index(request):
-    context = {}
-    return render(request, 'index.html', context)
+    if request.method == 'POST' and request.FILES['file']:
+        json_data = json.loads(request.FILES['file'].read())
+        load_data(json_data)
+        return HttpResponseRedirect('/catalogueproduit/info')
+    else:
+        return render(request, 'index.html', {})
+
 
 def info(request):
     produits = Produit.objects.all()
@@ -51,15 +55,11 @@ def info_gestion_commerciale(request):
     context = api.send_request('gestioncommerciale', 'api/info')
     return render(request, 'info_gestion_commerciale.html', context)
 
-def load_data(request):
-    json_file = open('static/data.json')
 
-    json_data = json.load(json_file)
+def load_data(json_data):
     for product in json_data["produits"]:
         new_product = Produit(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=product["prix"])
         new_product.save()
-    json_file.close()
-
     return HttpResponse(json.dumps(json_data))
 
 def api_data(request):

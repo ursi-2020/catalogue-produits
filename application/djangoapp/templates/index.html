@@ -6,9 +6,11 @@
 </head>
 <body>
 <h1>Catalogue Produits</h1>
-<form action="/catalogueproduit/load-data">
-    <input type="submit" value="Charger les informations du catalogue" />
-</form>
+ <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="file">
+    <button type="submit">Charger le fichier de données</button>
+  </form>
 <form action="/catalogueproduit/info">
     <input type="submit" value="Informations du catalogue" />
 </form>

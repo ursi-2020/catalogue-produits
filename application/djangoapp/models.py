@@ -9,7 +9,7 @@ class Produit(models.Model):
     prix = models.PositiveIntegerField()
 
     def __str__(self):
-        return 'Produit: {}'.format(self.nom)
+        return 'Produit: {}'.format(self.codeProduit, self.familleProduit, self.descriptionProduit, self.quantiteMin, self.packaging, self.prix)
 
 
 class User(models.Model):

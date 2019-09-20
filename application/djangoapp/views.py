@@ -63,8 +63,16 @@ def load_data(json_data):
     return HttpResponse(json.dumps(json_data))
 
 def api_data(request):
-    produits = list(Produit.objects.all().values())
-    return JsonResponse({'produits' : produits})
+    codeProduit = request.GET.get('codeProduit')
+    if (codeProduit):
+        produit = list(Produit.objects.filter(codeProduit=codeProduit).values())
+        if (len(produit) == 0):
+            return JsonResponse({'error': 'Code produit invalide ou produit inexistant'}, status=404)
+        else:
+            return JsonResponse({'produit': produit[0]})
+    else:
+        produits = list(Produit.objects.all().values())
+        return JsonResponse({'produits' : produits})
 
 #def api_info(request):
  #   data = api.send_request('gestion-commercial', 'api-info')

@@ -6,6 +6,7 @@ from django.shortcuts import render
 from .forms import ArticleForm
 from django.http import JsonResponse
 from django.core import serializers
+import json
 
 
 def index(request):
@@ -34,3 +35,13 @@ def api_info(request):
 def info_gestion_commerciale(request):
     context = api.send_request('gestioncommerciale', 'api/info')
     return render(request, 'info_gestion_commerciale.html', context)
+
+def load_data(request):
+    json_file = open('/static/data.json')
+
+    json_data = json.load(json_file)
+
+    print(json_data)
+    json_file.close()
+
+    return HttpResponse("OK")

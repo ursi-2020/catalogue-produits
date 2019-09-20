@@ -1,0 +1,16 @@
+[
+   {
+      "nom":"produit1",
+      "id_fournisseur":664,
+      "nom_fournisseur":"nomfournisseur1",
+      "id_produit_fournisseur":1,
+      "prix_achat":10
+   },
+   {
+      "nom":"produit2",
+      "id_fournisseur":664,
+      "nom_fournisseur":"nomfournisseur1",
+      "id_produit_fournisseur":2,
+      "prix_achat":10
+   }
+]

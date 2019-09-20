@@ -1,10 +1,10 @@
 from django.db import models
 
 class Produit(models.Model):
-    code_produit = models.CharField(max_length=200)
-    famille_produit = models.CharField(max_length=200)
-    description_produit = models.CharField(max_length=200)
-    quantite_min = models.PositiveIntegerField()
+    codeProduit = models.CharField(max_length=200)
+    familleProduit = models.CharField(max_length=200)
+    descriptionProduit = models.CharField(max_length=200)
+    quantiteMin = models.PositiveIntegerField()
     packaging = models.PositiveIntegerField()
     prix = models.PositiveIntegerField()
 

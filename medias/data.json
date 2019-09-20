@@ -1,0 +1,68 @@
+{
+    "produits": [
+        {
+            "codeProduit": "X1-0",
+            "familleProduit": "Frigos",
+            "descriptionProduit": "Frigos:P1-0",
+            "quantiteMin": 15,
+            "packaging": 2,
+            "prix": 4.24
+        },
+        {
+            "codeProduit": "X1-1",
+            "familleProduit": "Console",
+            "descriptionProduit": "Console:P3-1",
+            "quantiteMin": 5,
+            "packaging": 1,
+            "prix": 1.54
+        },
+        {
+            "codeProduit": "X1-2",
+            "familleProduit": "Frigos",
+            "descriptionProduit": "Frigos:P3-2",
+            "quantiteMin": 10,
+            "packaging": 1,
+            "prix": 79.48
+        },
+        {
+            "codeProduit": "X1-3",
+            "familleProduit": "TV",
+            "descriptionProduit": "TV:P1-3",
+            "quantiteMin": 15,
+            "packaging": 5,
+            "prix": 76.76
+        },
+        {
+            "codeProduit": "X1-4",
+            "familleProduit": "TV",
+            "descriptionProduit": "TV:P3-4",
+            "quantiteMin": 15,
+            "packaging": 4,
+            "prix": 74.00
+        },
+        {
+            "codeProduit": "X1-8",
+            "familleProduit": "Console",
+            "descriptionProduit": "Console:P1-8",
+            "quantiteMin": 5,
+            "packaging": 4,
+            "prix": 58.87
+        },
+        {
+            "codeProduit": "X1-9",
+            "familleProduit": "Frigos",
+            "descriptionProduit": "Frigos:P2-9",
+            "quantiteMin": 10,
+            "packaging": 5,
+            "prix": 71.95
+        },
+        {
+            "codeProduit": "X1-10",
+            "familleProduit": "TV",
+            "descriptionProduit": "TV:P3-10",
+            "quantiteMin": 15,
+            "packaging": 2,
+            "prix": 26.24
+        }
+    ]
+}

@@ -16,8 +16,8 @@ def index(request):
     return render(request, 'index.html', context)
 
 def info(request):
-    articles = Article.objects.all()
-    context = {'articles' : articles}
+    produits = Produit.objects.all()
+    context = {'produits' : produits}
     return render(request, 'info.html', context)
 
 @csrf_exempt
@@ -55,16 +55,21 @@ def load_data(request):
     json_file = open('static/data.json')
 
     json_data = json.load(json_file)
-    for product in json_data[produits]:
-        print(product, "\n")
+    for product in json_data["produits"]:
+        new_product = Produit(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=product["prix"])
+        new_product.save()
     json_file.close()
 
     return HttpResponse(json.dumps(json_data))
 
-def api_info(request):
-    data = api.send_request('gestion-commercial', 'api-info')
-    context = json.loads(data)
-    return render(request, 'info_gestion_commerciale.html', context)
+def api_data(request):
+    produits = list(Produit.objects.all().values())
+    return JsonResponse({'produits' : produits})
+
+#def api_info(request):
+ #   data = api.send_request('gestion-commercial', 'api-info')
+  #  context = json.loads(data)
+   # return render(request, 'info_gestion_commerciale.html', context)
 
 
 def add_user_gestion_commerciale(request):

@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='produit',
             name='prix',
-            field=models.PositiveIntegerField(default=''),
+            field=models.PositiveIntegerField(default=0),
             preserve_default=False,
         ),
         migrations.AddField(

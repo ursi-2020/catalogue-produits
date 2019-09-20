@@ -9,9 +9,9 @@
 <form action="/">
     <input type="submit" value="Retour à l'accueil" />
 </form>
-<h2>Articles</h2>
-{% for article in articles %}
-<p>Nom : {{ article.nom }} , Stock : {{article.stock}}</p>
+<h2>Produits</h2>
+{% for produit in produits %}
+<p>code : {{ produit.code_produit }} , quantité : {{produit.quantite_min}}</p>
 {% endfor %}
 </body>
 </html>

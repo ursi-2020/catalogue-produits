@@ -1,15 +1,13 @@
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from apipkg import api_manager as api
 from application.djangoapp.models import *
 from django.shortcuts import render
 from .forms import ArticleForm, UserForm
 from django.http import JsonResponse
-<<<<<<< HEAD
 from django.core import serializers
-=======
 from .models import Article
 from django.views.decorators.csrf import csrf_exempt
->>>>>>> 07add1244bcfa8c555c5019f735b35264998aa18
 import json
 
 
@@ -54,14 +52,14 @@ def info_gestion_commerciale(request):
     return render(request, 'info_gestion_commerciale.html', context)
 
 def load_data(request):
-    json_file = open('/static/data.json')
+    json_file = open('static/data.json')
 
     json_data = json.load(json_file)
-
-    print(json_data)
+    for product in json_data[produits]:
+        print(product, "\n")
     json_file.close()
 
-    return HttpResponse("OK")
+    return HttpResponse(json.dumps(json_data))
 
 def api_info(request):
     data = api.send_request('gestion-commercial', 'api-info')

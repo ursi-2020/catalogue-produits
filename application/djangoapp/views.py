@@ -59,7 +59,8 @@ def info_gestion_commerciale(request):
 
 def load_data(json_data):
     for product in json_data["produits"]:
-        new_product = Produit(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=product["prix"])
+        rounded_price = product["prix"] * 100
+        new_product = Produit(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=rounded_price)
         new_product.save()
     return HttpResponse(json.dumps(json_data))
 

@@ -9,5 +9,4 @@
 
 # Rôle de l'application
 
-Le rôle de ... est de ... dans le système d'information.
-etc.
+Le rôle du catalogue produit est de récuperer les informations produits depuis les différents fournisseurs pour pouvoir les redistribuer dans le système d'information

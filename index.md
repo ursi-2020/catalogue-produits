@@ -2,10 +2,10 @@
 
 # Sections
 
-* [API](/docs/api.md)
-* [Communication](/docs/communication.md)
-* [Flux](/docs/flux.md)
-* [Use Case](/docs/use-case.md)
+* [API](api.md)
+* [Communication](communication.md)
+* [Flux](flux.md)
+* [Use Case](use-case.md)
 
 # Rôle de l'application
 

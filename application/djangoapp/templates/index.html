@@ -6,12 +6,24 @@
 </head>
 <body>
 <h1>Catalogue Produits</h1>
+<h2>Le catalogue produit stocke les informations envoyées par les différents fournisseurs</h2>
+<h3>Charger le catalogue produit à l'aide d'un fichier JSON</h3>
  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" name="file">
     <button type="submit">Charger le fichier de données</button>
   </form>
+<h3>Aller consulter les données actuelles du catalogue</h3>
 <form action="/catalogueproduit/info">
     <input type="submit" value="Informations du catalogue" />
+</form>
+<h3>Vider la base de données</h3>
+<form action="/catalogueproduit/clear-data">
+    <input type="submit" value="Clear Data" />
+</form>
+<h3>Tests des routes API</h3>
+<p>Récuperer tous les produits du catalogue</p>
+<form action="/catalogueproduit/api/data">
+    <input type="submit" value="GET" />
 </form>
 </body>

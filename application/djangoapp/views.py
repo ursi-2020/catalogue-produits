@@ -71,13 +71,17 @@ def api_data(request):
         try:
             produit = Produit.objects.get(id=id)
         except Produit.DoesNotExist:
-            return JsonResponse({'error': 'Code produit invalide ou produit inexistant'}, status=404)
+            return JsonResponse({'error': 'ID produit invalide ou produit inexistant'}, status=404)
         else:
             return JsonResponse({'produit' : model_to_dict(produit)})
     else:
         # If no id is specified, return every product
         produits = list(Produit.objects.all().values())
         return JsonResponse({'produits' : produits})
+
+def clear_data(request):
+    deleted = Produit.objects.all().delete()
+    return HttpResponseRedirect('info')
 
 #def api_info(request):
  #   data = api.send_request('gestion-commercial', 'api-info')

@@ -3,15 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
-
+    <style type="text/css" media="screen">
+    .my-table {
+    border: solid 1px #DDEEEE;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font: normal 13px Arial, sans-serif;
+    }
+    .my-table thead th {
+    background-color: #DDEFEF;
+    border: solid 1px #DDEEEE;
+    color: #336B6B;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
+    }
+    .my-table tbody td {
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+}
+    </style>
 </head>
 <body>
 <form action="/catalogueproduit/">
     <input type="submit" value="Retour à l'accueil" />
 </form>
-<h2>Produits</h2>
-{% for produit in produits %}
-<p>code : {{ produit.codeProduit }} , quantité : {{produit.quantiteMin}}, , prix : {{produit.prix}}</p>
-{% endfor %}
+<h1>Informations Produits</h2>
+<h2>Le tableau ci-dessous regroupe toutes les informations produit stockées dans la base de données du catalogue</p>
+<table class="my-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Code Produit</th>
+            <th>Famille Produit</th>
+            <th>Description</th>
+            <th>Quantité minimale</th>
+            <th>Packaging</th>
+            <th>Prix (en centimes)</th>
+        </tr>
+    </thead>
+    {% for produit in produits %}
+    <tbody>
+        <tr>
+            <td>{{ produit.id }}</td>
+            <td>{{ produit.codeProduit }}</td>
+            <td>{{produit.familleProduit}}</td>
+            <td>{{produit.descriptionProduit}}</td>
+            <td>{{produit.quantiteMin}}</td>
+            <td>{{produit.packaging}}</td>
+            <td>{{produit.prix}}</td>
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
 </body>
 </html>

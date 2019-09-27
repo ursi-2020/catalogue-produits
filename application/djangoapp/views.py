@@ -3,19 +3,21 @@ from django.http import HttpResponse
 from apipkg import api_manager as api
 from application.djangoapp.models import *
 from django.shortcuts import render
-from .forms import ArticleForm, UserForm
+from .forms import ArticleForm
 from django.http import JsonResponse
 from django.core import serializers
 from .models import Article
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 import json
+from datetime import datetime, timedelta
+import requests
 
 def index(request):
     if request.method == 'POST' and request.FILES['file']:
-        json_data = json.loads(request.FILES['file'].read())
-        load_data(json_data)
-        return HttpResponseRedirect('/catalogueproduit/info')
+        json_data = request.FILES['file'].read()
+        send = api.post_request('catalogue-produit', 'load-data', json_data)
+        return HttpResponseRedirect('/info')
     else:
         return render(request, 'index.html', {})
 
@@ -25,44 +27,31 @@ def info(request):
     context = {'produits' : produits}
     return render(request, 'info.html', context)
 
-@csrf_exempt
-def add_article(request):
-    if request.method == 'POST':
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            new_article = form.save()
-            return HttpResponseRedirect('/info')
-    else:
-        form = ArticleForm()
-    return render(request, 'add_article.html', {'form' : form})
-
-def api_info(request):
-    articles = list(Article.objects.all().values())
-    return JsonResponse({'articles' : articles})
+def schedule_load_data(request):
+    clock_time = api.send_request('scheduler', 'clock/time')
+    time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
+    time = time + timedelta(seconds=10)
+    #data = {'host' : 'catalogue-produit', 'url' : 'catalogueproduit/load-data', 'recurrence' : 'minute', 'data' : json_data, 'source' : 'catalogue-produit', 'name' : 'Chargement automatique du catalogue produit'}
+    #send = api.post_request('scheduler', 'schedule/add')
+    schedule_task('catalogue-produit','automatic-load-data', time, 'minute', '{}', 'catalogue-produit','automatic_load_db')
+    return HttpResponseRedirect('/info')
 
 @csrf_exempt
-def api_add_article(request):
-    if request.method == 'POST':
-        body = json.loads(request.body)
-        print(body)
-        new_user = Article(nom=body["nom"], stock=body["stock"])
-        new_user.save()
-        return HttpResponseRedirect('/info')
-    return HttpResponse("OK")
-
-
-
-def info_gestion_commerciale(request):
-    context = api.send_request('gestioncommerciale', 'api/info')
-    return render(request, 'info_gestion_commerciale.html', context)
-
-
-def load_data(json_data):
+def load_data(request):
+    json_data = json.loads(request.body)
     for product in json_data["produits"]:
         rounded_price = product["prix"] * 100
         new_product = Produit(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=rounded_price)
         new_product.save()
     return HttpResponse(json.dumps(json_data))
+
+@csrf_exempt
+def automatic_load_data(request):
+    json_file = open('tests/data.json')
+    json_data = json.load(json_file)
+    send = api.post_request('catalogue-produit', 'load-data', json.dumps(json_data))
+    json_file.close()
+    return HttpResponse("OK")
 
 def api_data(request):
     id = request.GET.get('id')
@@ -83,19 +72,11 @@ def clear_data(request):
     deleted = Produit.objects.all().delete()
     return HttpResponseRedirect('info')
 
-#def api_info(request):
- #   data = api.send_request('gestion-commercial', 'api-info')
-  #  context = json.loads(data)
-   # return render(request, 'info_gestion_commerciale.html', context)
-
-
-def add_user_gestion_commerciale(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            clean_data = form.cleaned_data
-            dump = json.dumps(clean_data)
-            sent = api.post_request('gestion-commercial', 'api-add-user', dump)
-    else:
-        form = UserForm()
-    return render(request, 'add_user.html', {'form': form})
+def schedule_task(host, url, time, recurrence, data, source, name):
+    time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
+    headers = {'Host': 'scheduler'}
+    data = {"target_url": url, "target_app": host, "time": time_str, "recurrence": recurrence, "data": data, "source_app": source, "name": name}
+    r = requests.post(api.api_services_url + 'schedule/add', headers = headers, json = data)
+    print(r.status_code)
+    print(r.text)
+    return r.text

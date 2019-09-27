@@ -13,17 +13,21 @@
     <input type="file" name="file">
     <button type="submit">Charger le fichier de données</button>
   </form>
+<h3>Utiliser le scheduler pour charger un fichier de données</h3>
+<form action="/schedule-load-data">
+    <input type="submit" value="Activer le scheduler" />
+</form>
 <h3>Aller consulter les données actuelles du catalogue</h3>
-<form action="/catalogueproduit/info">
+<form action="/info">
     <input type="submit" value="Informations du catalogue" />
 </form>
 <h3>Vider la base de données</h3>
-<form action="/catalogueproduit/clear-data">
+<form action="/clear-data">
     <input type="submit" value="Clear Data" />
 </form>
 <h3>Tests des routes API</h3>
 <p>Récuperer tous les produits du catalogue</p>
-<form action="/catalogueproduit/api/data">
+<form action="/api/data">
     <input type="submit" value="GET" />
 </form>
 </body>

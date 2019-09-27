@@ -11,14 +11,6 @@ class Produit(models.Model):
     def __str__(self):
         return "{\"codeProduit\":{}, \"familleProduit\":{}, \"descriptionProduit\":{},\"quantiteMin\":{}, \"packaging\":{}, \"prix\":{}}".format(self.codeProduit, self.familleProduit, self.descriptionProduit, self.quantiteMin, self.packaging, self.prix)
 
-class User(models.Model):
-    nom = models.CharField(max_length=200)
-    prenom = models.CharField(max_length=200)
-    age = models.PositiveIntegerField()
-
-    def __str__(self):
-        return 'User: {}'.format(self.nom)
-
 class Article(models.Model):
     nom = models.CharField(max_length=200)
     stock = models.PositiveIntegerField()

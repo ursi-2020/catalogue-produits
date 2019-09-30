@@ -16,8 +16,13 @@ import requests
 def index(request):
     if request.method == 'POST' and request.FILES['file']:
         json_data = request.FILES['file'].read()
-        send = api.post_request('catalogue-produit', 'load-data', json_data)
-        return HttpResponseRedirect('/info')
+        try:
+            is_json = json.loads(json_data)
+        except ValueError:
+            return render(request, 'index.html', {"error" : "Le fichier n'est pas au bon format"})
+        else:
+            send = api.post_request('catalogue-produit', 'load-data', json_data)
+            return HttpResponseRedirect('/info')
     else:
         return render(request, 'index.html', {})
 

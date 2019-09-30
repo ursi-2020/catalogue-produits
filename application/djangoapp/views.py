@@ -38,6 +38,7 @@ def schedule_load_data(request):
 
 @csrf_exempt
 def load_data(request):
+    Produit.objects.all().delete()
     json_data = json.loads(request.body)
     for product in json_data["produits"]:
         rounded_price = product["prix"] * 100

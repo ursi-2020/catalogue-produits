@@ -42,6 +42,7 @@
             <th>Quantité minimale</th>
             <th>Packaging</th>
             <th>Prix (en centimes)</th>
+            <th>Exclusivité</th>
         </tr>
     </thead>
     {% for produit in produits %}
@@ -54,6 +55,7 @@
             <td>{{produit.quantiteMin}}</td>
             <td>{{produit.packaging}}</td>
             <td>{{produit.prix}}</td>
+            <td>{{produit.exclusivite}}</td>
         </tr>
     </tbody>
     {% endfor %}

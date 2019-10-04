@@ -14,5 +14,5 @@ urlpatterns = [
     path('api/get-all', views.api_get_all, name='api-get-all'),
     path('api/get-ecommerce', views.api_get_ecommerce, name='api-get-ecommerce'),
     path('api/get-magasin', views.api_get_magasin, name='api-get-magasin'),
-    path(r'^api/get-by-id/(?P<id_product>\d+)/$', views.api_get_by_id, name='api-get-by-id')
+    path('api/get-by-id/<int:id_product>', views.api_get_by_id, name='api-get-by-id')
 ]

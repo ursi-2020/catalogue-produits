@@ -59,10 +59,10 @@ def automatic_load_data(request):
 def schedule_load_data(request):
     clock_time = api.send_request('scheduler', 'clock/time')
     time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
-    time = time + timedelta(seconds=10)
+    time = time + timedelta(days=1)
     #data = {'host' : 'catalogue-produit', 'url' : 'catalogueproduit/load-data', 'recurrence' : 'minute', 'data' : json_data, 'source' : 'catalogue-produit', 'name' : 'Chargement automatique du catalogue produit'}
     #send = api.post_request('scheduler', 'schedule/add')
-    schedule_task('catalogue-produit','automatic-load-data', time, 'minute', '{}', 'catalogue-produit','automatic_load_db')
+    schedule_task('catalogue-produit','automatic-load-data', time, 'day', '{}', 'catalogue-produit','automatic_load_db')
     return HttpResponseRedirect('/info')
 
 def clear_data(request):

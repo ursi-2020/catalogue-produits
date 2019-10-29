@@ -3,6 +3,7 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export $(cat ${DIR}/variables.env | xargs)
+export $(cat ${DIR}/custom.env | xargs)
 source /usr/local/bin/tc_variables.sh
 
 venvdir="${venvDirectory}/${DJANGO_APP_NAME}_venv"

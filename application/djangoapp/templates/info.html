@@ -35,7 +35,6 @@
 <table class="my-table">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Code Produit</th>
             <th>Famille Produit</th>
             <th>Description</th>
@@ -48,7 +47,6 @@
     {% for produit in produits %}
     <tbody>
         <tr>
-            <td>{{ produit.id }}</td>
             <td>{{ produit.codeProduit }}</td>
             <td>{{produit.familleProduit}}</td>
             <td>{{produit.descriptionProduit}}</td>

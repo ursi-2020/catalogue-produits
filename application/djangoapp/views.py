@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from apipkg import api_manager as api
+from apipkg import queue_manager as queue
 from application.djangoapp.models import *
 from django.shortcuts import render
 from .forms import ArticleForm
@@ -13,6 +14,7 @@ import json
 from datetime import datetime, timedelta
 import requests
 import random
+import os
 
 ### IHM ###
 
@@ -36,16 +38,41 @@ def info(request):
     return render(request, 'info.html', context)
 
 ### Data Loading and Clearing ###
+def write_catalogue_to_file(request):
+    return send_catalogue_file("crm")
+
+def send_catalogue_file(destination_app):
+    with open("catalogue.json", "w+") as f:
+        produits = Produit.objects
+        if destination_app == "ecommerce":
+            produits = produits.exclude(exclusivite__exact="magasin")
+        elif destination_app == "magasin":
+            produits = produits.exclude(exclusivite__exact="ecommerce")
+        else:
+            produits = produits.all()
+        json_data = list(produits.values())
+        json_data = {"produits" : json_data}
+        f.write(json.dumps(json_data))
+        r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
+                                                              'app': destination_app,
+                                                              'path': 'catalogue.json'})
+    return HttpResponse(r.text)     
 
 @csrf_exempt
 def load_data(request):
     Produit.objects.all().delete()
     json_data = json.loads(request.body)
+    new_products = []
     for product in json_data["produits"]:
         rounded_price = product["prix"] * 100
-        exclusivite = getExclusivite()
-        new_product = Produit(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=rounded_price, exclusivite=exclusivite)
-        new_product.save()
+        exclusivite = get_exclusivite()
+        new_product, created = Produit.objects.update_or_create(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=rounded_price, exclusivite=exclusivite)
+        if created:
+            print(created)
+            print(new_product)
+            new_products.append(new_product)
+    if len(new_products) > 0:
+        send_gesco_new_products({ "produits" : new_products})
     return HttpResponse(json.dumps(json_data))
 
 @csrf_exempt
@@ -60,31 +87,18 @@ def schedule_load_data(request):
     clock_time = api.send_request('scheduler', 'clock/time')
     time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     time = time + timedelta(days=1)
-    #data = {'host' : 'catalogue-produit', 'url' : 'catalogueproduit/load-data', 'recurrence' : 'minute', 'data' : json_data, 'source' : 'catalogue-produit', 'name' : 'Chargement automatique du catalogue produit'}
-    #send = api.post_request('scheduler', 'schedule/add')
-    schedule_task('catalogue-produit','automatic-load-data', time, 'day', '{}', 'catalogue-produit','automatic_load_db')
+    api.schedule_task('catalogue-produit','automatic-load-data', time, 'day', '{}', 'catalogue-produit','automatic_load_db')
     return HttpResponseRedirect('/info')
 
 def clear_data(request):
     deleted = Produit.objects.all().delete()
     return HttpResponseRedirect('info')
 
-### Scheduler Wrapper ###
-
-def schedule_task(host, url, time, recurrence, data, source, name):
-    time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
-    headers = {'Host': 'scheduler'}
-    data = {"target_url": url, "target_app": host, "time": time_str, "recurrence": recurrence, "data": data, "source_app": source, "name": name}
-    r = requests.post(api.api_services_url + 'schedule/add', headers = headers, json = data)
-    print(r.status_code)
-    print(r.text)
-    return r.text
-
 ### API ###
 
 def api_get_all(request):
     if request.method != 'GET':
-        return HttpResponseNotAllowed();
+        return HttpResponseNotAllowed()
     produits = Produit.objects.all()
 
     filtered = filter(produits, request.GET.get('familleProduit', False))
@@ -94,7 +108,7 @@ def api_get_all(request):
 
 def api_get_ecommerce(request):
     if request.method != 'GET':
-        return HttpResponseNotAllowed();
+        return HttpResponseNotAllowed()
     produits = Produit.objects.exclude(exclusivite__exact="magasin")
 
     filtered = filter(produits, request.GET.get('familleProduit', False))
@@ -104,7 +118,7 @@ def api_get_ecommerce(request):
 
 def api_get_magasin(request):
     if request.method != 'GET':
-        return HttpResponseNotAllowed();
+        return HttpResponseNotAllowed()
     produits = Produit.objects.exclude(exclusivite__exact="ecommerce")
 
     filtered = filter(produits, request.GET.get('familleProduit', False))
@@ -114,7 +128,7 @@ def api_get_magasin(request):
 
 def api_get_by_id(request, id_product):
     if request.method != 'GET':
-        return HttpResponseNotAllowed();
+        return HttpResponseNotAllowed()
     if (id_product):
         try:
             produit = Produit.objects.get(id=id_product)
@@ -125,6 +139,17 @@ def api_get_by_id(request, id_product):
     else:
         return JsonResponse({'error': 'Veuillez spécifier un ID'}, status=400)
 
+### ASYNC MESSAGES ###
+def send_gesco_new_products(products):
+    '''
+    print(products)
+    products["functionname"] = "catalogue-add-product"
+    time = api.send_request('scheduler', 'clock/time')
+    message = { "from" : os.environ['DJANGO_APP_NAME'], "to" : os.environ['DJANGO_APP_NAME'], "datetime" : time, "body" : products}
+    queue.send('gestion-commercial', json.dumps(message))
+    '''
+    return
+
 ### FILTERS ###
 def filter(query_set, familleProduit):
     if (familleProduit):
@@ -132,7 +157,7 @@ def filter(query_set, familleProduit):
     return query_set
 
 ### HELPERS ###
-def getExclusivite():
+def get_exclusivite():
     val = random.random() * 100
     if val < 50:
         return ''

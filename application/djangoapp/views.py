@@ -38,25 +38,6 @@ def info(request):
     return render(request, 'info.html', context)
 
 ### Data Loading and Clearing ###
-def write_catalogue_to_file(request):
-    return send_catalogue_file("crm")
-
-def send_catalogue_file(destination_app):
-    with open("catalogue.json", "w+") as f:
-        produits = Produit.objects
-        if destination_app == "ecommerce":
-            produits = produits.exclude(exclusivite__exact="magasin")
-        elif destination_app == "magasin":
-            produits = produits.exclude(exclusivite__exact="ecommerce")
-        else:
-            produits = produits.all()
-        json_data = list(produits.values())
-        json_data = {"produits" : json_data}
-        f.write(json.dumps(json_data))
-        r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
-                                                              'app': destination_app,
-                                                              'path': 'catalogue.json'})
-    return HttpResponse(r.text)     
 
 @csrf_exempt
 def load_data(request):
@@ -145,6 +126,30 @@ def send_gesco_new_products(products):
     message = { "from" : os.environ['DJANGO_APP_NAME'], "to" : to, "datetime" : time, "body" : products}
     queue.send(to, json.dumps(message))
     return
+
+
+### ASYNC FILES ###
+
+def write_catalogue_to_file(request):
+    return send_catalogue_file("crm")
+
+def send_catalogue_file(destination_app):
+    with open("catalogue.json", "w+") as f:
+        produits = Produit.objects
+        if destination_app == "ecommerce":
+            produits = produits.exclude(exclusivite__exact="magasin")
+        elif destination_app == "magasin":
+            produits = produits.exclude(exclusivite__exact="ecommerce")
+        else:
+            produits = produits.all()
+        json_data = list(produits.values())
+        json_data = {"produits" : json_data}
+        f.write(json.dumps(json_data))
+        r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
+                                                              'app': destination_app,
+                                                              'path': 'catalogue.json'})
+    return HttpResponse(r.text)     
+
 
 ### FILTERS ###
 def filter(query_set, familleProduit):

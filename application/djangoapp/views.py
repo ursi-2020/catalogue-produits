@@ -60,17 +60,15 @@ def send_catalogue_file(destination_app):
 
 @csrf_exempt
 def load_data(request):
-    Produit.objects.all().delete()
     json_data = json.loads(request.body)
     new_products = []
     for product in json_data["produits"]:
         rounded_price = product["prix"] * 100
         exclusivite = get_exclusivite()
-        new_product, created = Produit.objects.update_or_create(codeProduit=product["codeProduit"], familleProduit=product["familleProduit"], descriptionProduit=product["descriptionProduit"], quantiteMin=product["quantiteMin"], packaging=product["packaging"], prix=rounded_price, exclusivite=exclusivite)
+        defaults = {"familleProduit" : product["familleProduit"], "descriptionProduit" : product["descriptionProduit"], "quantiteMin" : product["quantiteMin"], "packaging" : product["packaging"], "prix" : rounded_price, "exclusivite" : exclusivite}
+        new_product, created = Produit.objects.update_or_create(codeProduit=product["codeProduit"],  defaults=defaults)
         if created:
-            print(created)
-            print(new_product)
-            new_products.append(new_product)
+            new_products.append(model_to_dict(new_product))
     if len(new_products) > 0:
         send_gesco_new_products({ "produits" : new_products})
     return HttpResponse(json.dumps(json_data))
@@ -141,13 +139,11 @@ def api_get_by_id(request, id_product):
 
 ### ASYNC MESSAGES ###
 def send_gesco_new_products(products):
-    '''
-    print(products)
     products["functionname"] = "catalogue-add-product"
+    to =  "gestion-commercial"
     time = api.send_request('scheduler', 'clock/time')
-    message = { "from" : os.environ['DJANGO_APP_NAME'], "to" : os.environ['DJANGO_APP_NAME'], "datetime" : time, "body" : products}
-    queue.send('gestion-commercial', json.dumps(message))
-    '''
+    message = { "from" : os.environ['DJANGO_APP_NAME'], "to" : to, "datetime" : time, "body" : products}
+    queue.send(to, json.dumps(message))
     return
 
 ### FILTERS ###

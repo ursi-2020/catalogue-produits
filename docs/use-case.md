@@ -1,4 +1,11 @@
 [Sommaire](https://ursi-2020.github.io/catalogue-produits/)
+
+# Use Cases
+## Sprint 1 (10/09/2019)
+![Use Cases](img/use-case-1.png)
+
+# OLD DOCUMENTATION
+
 # Use Case Catalogue Produits
 Le catalogue produit est le référentiel des différents articles qui seront utilisés dans tout le SI. Voici les différents use cases qui seront implémentés.
 ![Use Cases](./use_cases.png)

@@ -105,18 +105,18 @@ def api_get_magasin(request):
     json_data = list(filtered.values())
     return JsonResponse({"produits": json_data})
 
-def api_get_by_id(request, id_product):
+def api_get_by_id(request, code_produit):
     if request.method != 'GET':
         return HttpResponseNotAllowed()
-    if (id_product):
+    if (code_produit):
         try:
-            produit = Produit.objects.get(id=id_product)
+            produit = Produit.objects.get(codeProduit=code_produit)
         except Produit.DoesNotExist:
-            return JsonResponse({'error': 'ID produit invalide ou produit inexistant'}, status=404)
+            return JsonResponse({'error': 'Code produit invalide ou produit inexistant'}, status=404)
         else:
             return JsonResponse({'produit' : model_to_dict(produit)})
     else:
-        return JsonResponse({'error': 'Veuillez spécifier un ID'}, status=400)
+        return JsonResponse({'error': 'Veuillez spécifier un code produit'}, status=400)
 
 ### ASYNC MESSAGES ###
 def send_gesco_new_products(products):

@@ -9,8 +9,8 @@ Le rôle du catalogue produit est de récuperer les informations produits depuis
 # Use Case
 
 *[Anciennes versions des Uses Cases](use-case.md)*
-
-![use case](img/use-case.png)
+## Sprint 2 (26/10/2019):
+![use case](img/use-case-2.png)
 
 # Membres du groupe
 

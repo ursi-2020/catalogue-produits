@@ -6,6 +6,7 @@ class Produit(models.Model):
     descriptionProduit = models.CharField(max_length=200)
     quantiteMin = models.PositiveIntegerField()
     packaging = models.PositiveIntegerField()
+    prixFournisseur = models.PositiveIntegerField()
     prix = models.PositiveIntegerField()
     exclusivite = models.CharField(max_length=10)
 

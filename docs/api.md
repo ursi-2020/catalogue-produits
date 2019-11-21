@@ -31,7 +31,8 @@ If a familleProduit is specified, returns only the products that match this cate
       "descriptionProduit": "Console:P3-1",
       "quantiteMin": 5,
       "packaging": 1,
-      "prix": 154,
+      "prixFournisseur" : 180,
+      "prix": 200,
       "exclusivite": ""
     },
     {
@@ -41,7 +42,8 @@ If a familleProduit is specified, returns only the products that match this cate
       "descriptionProduit": "Frigos:P1-0",
       "quantiteMin": 15,
       "packaging": 2,
-      "prix": 424,
+      "prixFournisseur" : 180,
+      "prix": 200,
       "exclusivite": "ecommerce"
     },
   ]
@@ -77,7 +79,8 @@ If a familleProduit is specified, returns only the products that match this cate
       "descriptionProduit": "Frigos:P1-0",
       "quantiteMin": 15,
       "packaging": 2,
-      "prix": 424,
+      "prixFournisseur": 180,
+      "prix": 200,
       "exclusivite": "ecommerce"
     },
     {
@@ -86,7 +89,8 @@ If a familleProduit is specified, returns only the products that match this cate
       "familleProduit": "Console",
       "descriptionProduit": "Console:P3-1",
       "quantiteMin": 5, "packaging": 1,
-      "prix": 154,
+      "prixFournisseur" : 180,
+      "prix": 200,
       "exclusivite": ""
     }
   ]
@@ -122,7 +126,8 @@ If a familleProduit is specified, returns only the products that match this cate
       "descriptionProduit": "Console:P3-1",
       "quantiteMin": 5,
       "packaging": 1,
-      "prix": 154,
+      "prixFournisseur" : 180,
+      "prix": 200,
       "exclusivite": ""
     },
     {
@@ -132,7 +137,8 @@ If a familleProduit is specified, returns only the products that match this cate
       "descriptionProduit": "Frigos:P3-2",
       "quantiteMin": 10,
       "packaging": 1,
-      "prix": 7948,
+      "prixFournisseur" : 180,
+      "prix": 200,
       "exclusivite": "magasin"}
   ]
 }
@@ -162,7 +168,8 @@ Get the details of a product registered in the Catalogue Produit db with ID.
     "descriptionProduit": "Console:P3-1",
     "quantiteMin": 5,
     "packaging": 1,
-    "prix": 154,
+    "prixFournisseur" : 180,
+    "prix": 200,
     "exclusivite": ""
   }
 }

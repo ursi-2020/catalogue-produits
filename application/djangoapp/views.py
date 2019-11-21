@@ -44,9 +44,10 @@ def load_data(request):
     json_data = json.loads(request.body)
     new_products = []
     for product in json_data["produits"]:
-        rounded_price = product["prix"] * 100
+        prix_fournisseur = product["prix"] * 100
+        prix_vente = int(prix_fournisseur * 1.3)
         exclusivite = get_exclusivite()
-        defaults = {"familleProduit" : product["familleProduit"], "descriptionProduit" : product["descriptionProduit"], "quantiteMin" : product["quantiteMin"], "packaging" : product["packaging"], "prix" : rounded_price, "exclusivite" : exclusivite}
+        defaults = {"familleProduit" : product["familleProduit"], "descriptionProduit" : product["descriptionProduit"], "quantiteMin" : product["quantiteMin"], "packaging" : product["packaging"], "prix" : prix_vente, "prixFournisseur" : prix_fournisseur, "exclusivite" : exclusivite}
         new_product, created = Produit.objects.update_or_create(codeProduit=product["codeProduit"],  defaults=defaults)
         if created:
             new_products.append(model_to_dict(new_product))

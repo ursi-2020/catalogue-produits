@@ -122,7 +122,7 @@ def api_get_by_id(request, code_produit):
 ### ASYNC MESSAGES ###
 def send_gesco_new_products(products):
     products["functionname"] = "catalogue-add-product"
-    to =  "gestion-commercial"
+    to =  "gestion-commerciale"
     time = api.send_request('scheduler', 'clock/time')
     message = { "from" : os.environ['DJANGO_APP_NAME'], "to" : to, "datetime" : time, "body" : products}
     queue.send(to, json.dumps(message))

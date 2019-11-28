@@ -153,7 +153,7 @@ def send_catalogue_file(destination_app):
 
 ### SIMULATEUR ###
 def simulateur(request):
-    return api.send_request('simulateur', 'control/catalog')
+    return JsonResponse({ "response" : api.send_request('simulateur', 'control/catalog')})
 
 
 ### FILTERS ###

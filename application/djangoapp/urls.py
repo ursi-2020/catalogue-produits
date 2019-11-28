@@ -9,6 +9,7 @@ urlpatterns = [
     path('schedule-load-data', views.schedule_load_data, name='schedule-load-data'),
     path('automatic-load-data', views.automatic_load_data, name='automatic-load-data'),
     path('clear-data', views.clear_data, name='clear-data'),
+    path('simulateur', views.simulateur, name='simulateur'),
 
     path('write-to-file', views.write_catalogue_to_file, name='write-to-file'),
     ## API ROUTES ##

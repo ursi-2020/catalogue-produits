@@ -151,6 +151,10 @@ def send_catalogue_file(destination_app):
                                                               'path': 'catalogue.json'})
     return HttpResponse(r.text)     
 
+### SIMULATEUR ###
+def simulateur(request):
+    return api.send_request('simulateur', 'control/catalog')
+
 
 ### FILTERS ###
 def filter(query_set, familleProduit):

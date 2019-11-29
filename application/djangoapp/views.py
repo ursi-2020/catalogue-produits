@@ -174,6 +174,7 @@ def filter(query_set, familleProduit):
 
 ### HELPERS ###
 def get_exclusivite():
+    val = random.random() * 100
     if val < 25:
         return 'ecommerce'
     elif val < 50:

@@ -159,6 +159,7 @@ def send_catalogue_file(destination_app):
     return HttpResponse(r.text)     
 
 ### SIMULATEUR ###
+@csrf_exempt
 def load_from_fournisseur(request):
     products = api.send_request('fo', 'apis/catalogToRE')
     code = api.post_request('catalogue-produit', 'load-data', products)
@@ -173,11 +174,10 @@ def filter(query_set, familleProduit):
 
 ### HELPERS ###
 def get_exclusivite():
-    val = random.random() * 100
-    if val < 50:
-        return ''
-    elif val < 75:
+    if val < 25:
         return 'ecommerce'
-    else:
+    elif val < 50:
         return 'magasin'
+    else:
+        return ''
 

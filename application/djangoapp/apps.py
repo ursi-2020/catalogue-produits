@@ -14,6 +14,8 @@ class ApplicationConfig(AppConfig):
     def ready(self):
         if os.environ.get('RUN_MAIN'):
             name = os.environ['DJANGO_APP_NAME']
+            scheduler_reset_url = '/app/delete?source=' + name
+            status_code = api.post_request('scheduler', scheduler_reset_url, '{}')
             api.unregister(name)
             api.register(myappurl, name)
             clock_time = api.send_request('scheduler', 'clock/time')

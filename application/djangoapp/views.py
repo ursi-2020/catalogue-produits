@@ -128,11 +128,18 @@ def send_gesco_new_products(products):
     queue.send(to, json.dumps(message))
     return
 
-
 ### ASYNC FILES ###
+def testfile(request):
+    req_data = request.get_json()
+
+    app = req_data['app'] # the name of the sender
+    path = req_data['path'] # the path where you will find the file
+    print(app)
+    print(path)
+    return 200
 
 def write_catalogue_to_file(request):
-    return send_catalogue_file("crm")
+    return send_catalogue_file("catalogue-produit")
 
 def send_catalogue_file(destination_app):
     with open("catalogue.json", "w+") as f:
@@ -146,14 +153,16 @@ def send_catalogue_file(destination_app):
         json_data = list(produits.values())
         json_data = {"produits" : json_data}
         f.write(json.dumps(json_data))
-        r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
+    r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
                                                               'app': destination_app,
-                                                              'path': 'catalogue.json'})
+                                                              'path': '/mnt/technical_base/catalogue-produit/catalogue.json'})
     return HttpResponse(r.text)     
 
 ### SIMULATEUR ###
-def simulateur(request):
-    return JsonResponse({ "response" : api.send_request('fo', 'apis/catalogToRE')})
+def load_from_fournisseur(request):
+    products = api.send_request('fo', 'apis/catalogToRE')
+    code = api.post_request('catalogue-produit', 'load-data', products)
+    return JsonResponse({"response" : code})
 
 
 ### FILTERS ###

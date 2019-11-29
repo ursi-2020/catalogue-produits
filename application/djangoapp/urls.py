@@ -9,7 +9,9 @@ urlpatterns = [
     path('schedule-load-data', views.schedule_load_data, name='schedule-load-data'),
     path('automatic-load-data', views.automatic_load_data, name='automatic-load-data'),
     path('clear-data', views.clear_data, name='clear-data'),
-    path('simulateur', views.simulateur, name='simulateur'),
+    ## TESTS ROUTES ##
+    path('load-from-fournisseur', views.load_from_fournisseur, name='load-from-fournisseur'),
+    path('testfile', views.testfile, name='testfile'),
 
     path('write-to-file', views.write_catalogue_to_file, name='write-to-file'),
     ## API ROUTES ##

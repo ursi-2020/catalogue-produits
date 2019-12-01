@@ -129,18 +129,22 @@ def send_gesco_new_products(products):
     return
 
 ### ASYNC FILES ###
+@csrf_exempt
 def testfile(request):
-    req_data = request.get_json()
-
+    req_data = (request.POST)
+    print(req_data)
+    return HttpResponse(200)
+"""
     app = req_data['app'] # the name of the sender
     path = req_data['path'] # the path where you will find the file
     print(app)
     print(path)
     return 200
+"""
 
 def register(request):
     r = requests.post('http://127.0.0.1:5001/register', data={'app': 'catalogue-produit',
-                                                              'path': '/mnt/technical-base/test',
+                                                              'path': '/mnt/technical_base/test',
                                                               'route': 'http://127.0.0.1:9070/testfile'})
     return HttpResponse(r)
 
@@ -165,7 +169,10 @@ def send_catalogue_file(destination_app):
         f.write(json.dumps(json_data))
     r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
                                                               'app': destination_app,
-                                                              'path': 'catalogue.json'})
+                                                              'path': '/mnt/technical_base/catalogue-produit/catalogue.json'})
+    print("in send catalogue_file %r " %r)
+    r2 = requests.post('http://127.0.0.1:5001/manage')
+    print("Manage : %r" % r2)
     return HttpResponse(r.text)     
 
 ### SIMULATEUR ###

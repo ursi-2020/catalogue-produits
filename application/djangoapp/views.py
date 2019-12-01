@@ -138,8 +138,18 @@ def testfile(request):
     print(path)
     return 200
 
+def register(request):
+    r = requests.post('http://127.0.0.1:5001/register', data={'app': 'catalogue-produit',
+                                                              'path': '/mnt/technical-base/test',
+                                                              'route': 'http://127.0.0.1:9070/testfile'})
+    return HttpResponse(r)
+
+def unregister(request):
+    r = requests.post('http://127.0.0.1:5001/unregister', data={'app': 'catalogue-produit'})
+    return HttpResponse(r)
+
 def write_catalogue_to_file(request):
-    return send_catalogue_file("catalogue-produit")
+    return send_catalogue_file('catalogue-produit')
 
 def send_catalogue_file(destination_app):
     with open("catalogue.json", "w+") as f:
@@ -155,7 +165,7 @@ def send_catalogue_file(destination_app):
         f.write(json.dumps(json_data))
     r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
                                                               'app': destination_app,
-                                                              'path': '/mnt/technical_base/catalogue-produit/catalogue.json'})
+                                                              'path': 'catalogue.json'})
     return HttpResponse(r.text)     
 
 ### SIMULATEUR ###

@@ -11,7 +11,11 @@ urlpatterns = [
     path('clear-data', views.clear_data, name='clear-data'),
     ## TESTS ROUTES ##
     path('load-from-fournisseur', views.load_from_fournisseur, name='load-from-fournisseur'),
+
+    ## File manager routes ##
     path('testfile', views.testfile, name='testfile'),
+    path('register', views.register, name='register'),
+    path('unregister', views.unregister, name='unregister'),
 
     path('write-to-file', views.write_catalogue_to_file, name='write-to-file'),
     ## API ROUTES ##

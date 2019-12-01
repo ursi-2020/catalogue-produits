@@ -11,6 +11,15 @@ myappurl = "http://localhost:" + os.environ["WEBSERVER_PORT"]
 class ApplicationConfig(AppConfig):
     name = 'application.djangoapp'
 
+
+    def resetFileManager(self):
+        r = requests.post('http://127.0.0.1:5001/unregister', data={'app': 'catalogue-produit'})
+        print('[X] Unregistered to filemanager %s' % r.text)
+        r = requests.post('http://127.0.0.1:5001/register', data={'app': 'catalogue-produit',
+                                                              'path': '/mnt/technical_base/catalogue-produit/tests',
+                                                              'route': 'http://127.0.0.1:9070/testfile'})
+        print('[X] Registered to filemanager %s' % r.text)
+
     def ready(self):
         if os.environ.get('RUN_MAIN'):
             name = os.environ['DJANGO_APP_NAME']
@@ -18,6 +27,7 @@ class ApplicationConfig(AppConfig):
             status_code = api.post_request('scheduler', scheduler_reset_url, '{}')
             api.unregister(name)
             api.register(myappurl, name)
+            self.resetFileManager()
             clock_time = api.send_request('scheduler', 'clock/time')
             time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
             time = time + timedelta(days=1)

@@ -53,6 +53,8 @@ def load_data(request):
             new_products.append(model_to_dict(new_product))
     if len(new_products) > 0:
         send_gesco_new_products({ "produits" : new_products})
+    ### Send catalogue as file to ecommerce
+    send_catalogue_file('ecommerce')
     return HttpResponse(json.dumps(json_data))
 
 @csrf_exempt
@@ -134,17 +136,10 @@ def testfile(request):
     req_data = (request.POST)
     print(req_data)
     return HttpResponse(200)
-"""
-    app = req_data['app'] # the name of the sender
-    path = req_data['path'] # the path where you will find the file
-    print(app)
-    print(path)
-    return 200
-"""
 
 def register(request):
     r = requests.post('http://127.0.0.1:5001/register', data={'app': 'catalogue-produit',
-                                                              'path': '/mnt/technical_base/test',
+                                                              'path': '/mnt/technical_base/catalogue-produit/tests',
                                                               'route': 'http://127.0.0.1:9070/testfile'})
     return HttpResponse(r)
 
@@ -167,18 +162,19 @@ def send_catalogue_file(destination_app):
         json_data = list(produits.values())
         json_data = {"produits" : json_data}
         f.write(json.dumps(json_data))
+    ## Send the catalogue to the app
     r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
                                                               'app': destination_app,
                                                               'path': '/mnt/technical_base/catalogue-produit/catalogue.json'})
-    print("in send catalogue_file %r " %r)
+    print("Sent file to %s : %s" % (destination_app, r.text))
+    ## Handle the queue to retrieve eventual files
     r2 = requests.post('http://127.0.0.1:5001/manage')
-    print("Manage : %r" % r2)
     return HttpResponse(r.text)     
 
 ### SIMULATEUR ###
 @csrf_exempt
 def load_from_fournisseur(request):
-    products = api.send_request('fo', 'apis/catalogToRE')
+    products = api.send_request('fo', 'products')
     code = api.post_request('catalogue-produit', 'load-data', products)
     return JsonResponse({"response" : code})
 

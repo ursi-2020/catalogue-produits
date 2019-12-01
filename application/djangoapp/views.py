@@ -121,6 +121,14 @@ def api_get_by_id(request, code_produit):
     else:
         return JsonResponse({'error': 'Veuillez spécifier un code produit'}, status=400)
 
+def api_get_products_by_file(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed()
+    destination_app = request.GET.get('app', False)
+    if (destination_app):
+        return send_catalogue_file(destination_app)
+    return JsonResponse({'error': "Veuillez specifier votre nom d'application"}, status=400)
+    
 ### ASYNC MESSAGES ###
 def send_gesco_new_products(products):
     products["functionname"] = "catalogue-add-product"

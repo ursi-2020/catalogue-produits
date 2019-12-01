@@ -22,5 +22,6 @@ urlpatterns = [
     path('api/get-all', views.api_get_all, name='api-get-all'),
     path('api/get-ecommerce', views.api_get_ecommerce, name='api-get-ecommerce'),
     path('api/get-magasin', views.api_get_magasin, name='api-get-magasin'),
-    path('api/get-by-id/<str:code_produit>', views.api_get_by_id, name='api-get-by-id')
+    path('api/get-by-id/<str:code_produit>', views.api_get_by_id, name='api-get-by-id'),
+    path('api/file/products', views.api_get_products_by_file, name='api-get-products-by-file'),
 ]

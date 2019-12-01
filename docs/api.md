@@ -181,3 +181,41 @@ Get the details of a product registered in the Catalogue Produit db with ID.
   "error": "ID produit invalide ou produit inexistant"
 }
 ```
+
+## Get products with Drive (File Manager)
+
+Formulate a request to receive the catalogue by file manager. This file will contain the products registered in the catalogue produits db.
+Depending on the app calling this route, the file will not contain the same products (ecommerce and magasin have their exclusivity).
+
+**Service name** : `catalogue-produit`
+
+**URL** : `api/file/products`
+
+**Method** : `GET`
+
+**Auth required** : NO
+
+**Query Parameters** : app : *string* MANDATORY
+
+**Content examples:**
+
+Success
+```json
+{
+  "info": "File successfully append to the sending queue"
+}
+```
+
+Error if no app provided
+```json
+{
+  "error": "Veuillez specifier votre nom d'application"
+}
+```
+
+Error if app is not registered
+```json
+{
+  "error": "App doesn't exist or did not register in our drive"
+}
+```

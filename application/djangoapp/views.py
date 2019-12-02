@@ -173,10 +173,9 @@ def send_catalogue_file(destination_app):
     ## Send the catalogue to the app
     r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
                                                               'app': destination_app,
-                                                              'path': '/mnt/technical_base/catalogue-produit/catalogue.json'})
+                                                              'path': '/mnt/technical_base/catalogue-produit/catalogue.json',
+                                                              'name_file' : 'catalogue.json'})
     print("Sent file to %s : %s" % (destination_app, r.text))
-    ## Handle the queue to retrieve eventual files
-    r2 = requests.post('http://127.0.0.1:5001/manage')
     return HttpResponse(r.text)     
 
 ### SIMULATEUR ###

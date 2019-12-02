@@ -25,7 +25,6 @@ If a familleProduit is specified, returns only the products that match this cate
 {
   "produits": [
     {
-      "id": 3291,
       "codeProduit": "X1-1",
       "familleProduit": "Console",
       "descriptionProduit": "Console:P3-1",
@@ -36,7 +35,6 @@ If a familleProduit is specified, returns only the products that match this cate
       "exclusivite": ""
     },
     {
-      "id": 3290,
       "codeProduit": "X1-0",
       "familleProduit": "Frigos",
       "descriptionProduit": "Frigos:P1-0",
@@ -73,7 +71,6 @@ If a familleProduit is specified, returns only the products that match this cate
 {
   "produits": [
     {
-      "id": 3290,
       "codeProduit": "X1-0",
       "familleProduit": "Frigos",
       "descriptionProduit": "Frigos:P1-0",
@@ -84,7 +81,6 @@ If a familleProduit is specified, returns only the products that match this cate
       "exclusivite": "ecommerce"
     },
     {
-      "id": 3291,
       "codeProduit": "X1-1",
       "familleProduit": "Console",
       "descriptionProduit": "Console:P3-1",
@@ -120,7 +116,6 @@ If a familleProduit is specified, returns only the products that match this cate
 {
   "produits": [
     {
-      "id": 3291,
       "codeProduit": "X1-1",
       "familleProduit": "Console",
       "descriptionProduit": "Console:P3-1",
@@ -131,7 +126,6 @@ If a familleProduit is specified, returns only the products that match this cate
       "exclusivite": ""
     },
     {
-      "id": 3292,
       "codeProduit": "X1-2",
       "familleProduit": "Frigos",
       "descriptionProduit": "Frigos:P3-2",
@@ -162,7 +156,6 @@ Get the details of a product registered in the Catalogue Produit db with ID.
 ```json
 {
   "produit" : {
-    "id": 3291,
     "codeProduit": "X1-1",
     "familleProduit": "Console",
     "descriptionProduit": "Console:P3-1",

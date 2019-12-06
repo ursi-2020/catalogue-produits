@@ -35,7 +35,9 @@
 <table class="my-table">
     <thead>
         <tr>
-            <th>Code Produit</th>
+            <th>Code Produit Interne</th>
+            <th>Code Produit Fournisseur</th>
+            <th>Nom Fournisseur</th>
             <th>Famille Produit</th>
             <th>Description</th>
             <th>Quantité minimale</th>
@@ -49,6 +51,8 @@
     <tbody>
         <tr>
             <td>{{ produit.codeProduit }}</td>
+            <td>{{ produit.codeProduitFournisseur }}</td>
+            <td>{{ produit.nomFournisseur }}</td>
             <td>{{produit.familleProduit}}</td>
             <td>{{produit.descriptionProduit}}</td>
             <td>{{produit.quantiteMin}}</td>

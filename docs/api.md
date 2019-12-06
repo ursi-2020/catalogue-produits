@@ -2,7 +2,8 @@
 
 # JSON API
 
-## Get all products
+## Applications
+### Get all products
 
 Get the products registered in the catalogue produits db.
 
@@ -25,7 +26,9 @@ If a familleProduit is specified, returns only the products that match this cate
 {
   "produits": [
     {
-      "codeProduit": "X1-1",
+      "codeProduit": "fo-X1-1",
+      "codeProduitFournisseur": "X1-1",
+      "nomFournisseur": "fo",
       "familleProduit": "Console",
       "descriptionProduit": "Console:P3-1",
       "quantiteMin": 5,
@@ -35,7 +38,9 @@ If a familleProduit is specified, returns only the products that match this cate
       "exclusivite": ""
     },
     {
-      "codeProduit": "X1-0",
+      "codeProduit": "fo-X1-0",
+      "codeProduitFournisseur": "X1-1",
+      "nomFournisseur": "fo",
       "familleProduit": "Frigos",
       "descriptionProduit": "Frigos:P1-0",
       "quantiteMin": 15,
@@ -48,7 +53,7 @@ If a familleProduit is specified, returns only the products that match this cate
 }
 ```
 
-## Get ecommerce products
+### Get ecommerce products
 
 Get the products that ecommerce can sell registered in the catalogue produits db.
 
@@ -71,7 +76,9 @@ If a familleProduit is specified, returns only the products that match this cate
 {
   "produits": [
     {
-      "codeProduit": "X1-0",
+      "codeProduit": "fo-X1-0",
+      "codeProduitFournisseur": "X1-1",
+      "nomFournisseur": "fo",
       "familleProduit": "Frigos",
       "descriptionProduit": "Frigos:P1-0",
       "quantiteMin": 15,
@@ -81,7 +88,9 @@ If a familleProduit is specified, returns only the products that match this cate
       "exclusivite": "ecommerce"
     },
     {
-      "codeProduit": "X1-1",
+      "codeProduit": "fo-X1-1",
+      "codeProduitFournisseur": "X1-1",
+      "nomFournisseur": "fo",
       "familleProduit": "Console",
       "descriptionProduit": "Console:P3-1",
       "quantiteMin": 5, "packaging": 1,
@@ -93,7 +102,7 @@ If a familleProduit is specified, returns only the products that match this cate
 }
 ```
 
-## Get magasin products
+### Get magasin products
 
 Get the products that magasin can sell registered in the Catalogue Produit db.
 
@@ -116,7 +125,9 @@ If a familleProduit is specified, returns only the products that match this cate
 {
   "produits": [
     {
-      "codeProduit": "X1-1",
+      "codeProduit": "fo-X1-1",
+      "codeProduitFournisseur": "X1-1",
+      "nomFournisseur": "fo",
       "familleProduit": "Console",
       "descriptionProduit": "Console:P3-1",
       "quantiteMin": 5,
@@ -126,7 +137,9 @@ If a familleProduit is specified, returns only the products that match this cate
       "exclusivite": ""
     },
     {
-      "codeProduit": "X1-2",
+      "codeProduit": "fo-X1-2",
+      "codeProduitFournisseur": "X1-1",
+      "nomFournisseur": "fo",
       "familleProduit": "Frigos",
       "descriptionProduit": "Frigos:P3-2",
       "quantiteMin": 10,
@@ -138,7 +151,7 @@ If a familleProduit is specified, returns only the products that match this cate
 }
 ```
 
-## Get one product by id
+### Get one product by id
 
 Get the details of a product registered in the Catalogue Produit db with ID.
 
@@ -156,7 +169,9 @@ Get the details of a product registered in the Catalogue Produit db with ID.
 ```json
 {
   "produit" : {
-    "codeProduit": "X1-1",
+    "codeProduit": "fo-X1-1",
+    "codeProduitFournisseur": "X1-1",
+    "nomFournisseur": "fo",
     "familleProduit": "Console",
     "descriptionProduit": "Console:P3-1",
     "quantiteMin": 5,
@@ -175,7 +190,7 @@ Get the details of a product registered in the Catalogue Produit db with ID.
 }
 ```
 
-## Get products with Drive (File Manager)
+### Get products with Drive (File Manager)
 
 Formulate a request to receive the catalogue by file manager. This file will contain the products registered in the catalogue produits db.
 Depending on the app calling this route, the file will not contain the same products (ecommerce and magasin have their exclusivity).
@@ -210,5 +225,108 @@ Error if app is not registered
 ```json
 {
   "error": "App doesn't exist or did not register in our drive"
+}
+```
+
+## Simulateur
+The following routes are designed to be called by the simulator
+
+### Get all products
+
+Get all the products registered in the catalogue db that ecommerce can sold.
+
+**Service name** : `catalogue-produit`
+
+**URL** : `api/simulateur/get-all`
+
+**Method** : `GET`
+
+**Auth required** : NO
+
+**Query Parameters** : N/A
+
+**Content examples:**
+
+Success
+
+```json
+{
+    "produits": [
+        {
+            "codeProduit": "fo-X1-0",
+            "codeProduitFournisseur": "X1-0",
+            "nomFournisseur": "fo",
+            "exclusivite": "ecommerce"
+        },
+        {
+            "codeProduit": "fo-X1-1",
+            "codeProduitFournisseur": "X1-1",
+            "nomFournisseur": "fo",
+            "exclusivite": ""
+        },
+        {
+            "codeProduit": "fo-X1-2",
+            "codeProduitFournisseur": "X1-2",
+            "nomFournisseur": "fo",
+            "exclusivite": ""
+        },
+        {
+            "codeProduit": "fo-X1-3",
+            "codeProduitFournisseur": "X1-3",
+            "nomFournisseur": "fo",
+            "exclusivite": "ecommerce"
+        }
+    ]
+}
+```
+### Get by code
+
+Get a product registered in the catalogue db that matches the nomFournisseur and the codeProduitFournisseur given as parameters.
+
+If those parameters are not present, returns an error
+
+**Service name** : `catalogue-produit`
+
+**URL** : `api/simulateur/get-by-code`
+
+**Method** : `GET`
+
+**Auth required** : NO
+
+**Query Parameters** : 
+- nomFournisseur : *string* **MANDATORY**
+- codeProduitFournisseur : *string* **MANDATORY**
+
+**Content examples:**
+
+Success
+
+```json
+{
+    "produit": {
+        "codeProduit": "fo-X1-1",
+        "codeProduitFournisseur": "X1-1",
+        "nomFournisseur": "fo",
+        "exclusivite": ""
+    }
+}
+```
+
+Errors
+```json
+{
+    "error": "Produit inexistant"
+}
+```
+
+```json
+{
+    "error": "Missing codeProduitFournisseur in query parameter"
+}
+```
+
+```json
+{
+    "error": "Missing nomFournisseur in query parameter"
 }
 ```

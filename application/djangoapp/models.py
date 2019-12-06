@@ -2,6 +2,8 @@ from django.db import models
 
 class Produit(models.Model):
     codeProduit = models.CharField(max_length=200, primary_key=True)
+    codeProduitFournisseur = models.CharField(max_length=200)
+    nomFournisseur = models.CharField(max_length=200)
     familleProduit = models.CharField(max_length=200)
     descriptionProduit = models.CharField(max_length=200)
     quantiteMin = models.PositiveIntegerField()

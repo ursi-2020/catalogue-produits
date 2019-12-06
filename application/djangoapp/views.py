@@ -44,11 +44,14 @@ def load_data(request):
     json_data = json.loads(request.body)
     new_products = []
     for product in json_data["produits"]:
+        # TODO: Ajouter le nom du fournisseur de manière dynamique
+        nomFournisseur = "fo"
+        codeProduit = "%s-%s" % (nomFournisseur, product["codeProduit"])
         prix_fournisseur = product["prix"] * 100
         prix_vente = int(prix_fournisseur * 1.3)
         exclusivite = get_exclusivite()
-        defaults = {"familleProduit" : product["familleProduit"], "descriptionProduit" : product["descriptionProduit"], "quantiteMin" : product["quantiteMin"], "packaging" : product["packaging"], "prix" : prix_vente, "prixFournisseur" : prix_fournisseur, "exclusivite" : exclusivite}
-        new_product, created = Produit.objects.update_or_create(codeProduit=product["codeProduit"],  defaults=defaults)
+        defaults = {"codeProduitFournisseur": product["codeProduit"], "nomFournisseur": nomFournisseur, "familleProduit" : product["familleProduit"], "descriptionProduit" : product["descriptionProduit"], "quantiteMin" : product["quantiteMin"], "packaging" : product["packaging"], "prix" : prix_vente, "prixFournisseur" : prix_fournisseur, "exclusivite" : exclusivite}
+        new_product, created = Produit.objects.update_or_create(codeProduit=codeProduit, defaults=defaults)
         if created:
             new_products.append(model_to_dict(new_product))
     if len(new_products) > 0:
@@ -82,7 +85,7 @@ def api_get_all(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed()
     produits = Produit.objects.all()
-
+    
     filtered = filter(produits, request.GET.get('familleProduit', False))
 
     json_data = list(filtered.values())
@@ -128,7 +131,34 @@ def api_get_products_by_file(request):
     if (destination_app):
         return send_catalogue_file(destination_app)
     return JsonResponse({'error': "Veuillez specifier votre nom d'application"}, status=400)
-    
+
+### SIMULATEUR API ###
+def api_simulateur_get_all(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed()
+    produits = list(Produit.objects.exclude(exclusivite__exact="magasin").values('codeProduit', 'codeProduitFournisseur', 'nomFournisseur', 'exclusivite'))
+    return JsonResponse({ 'produits' : produits })
+
+def api_simulateur_get_by_code(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed()
+    nomFournisseur = request.GET.get('nomFournisseur', False)
+    codeProduitFournisseur = request.GET.get('codeProduitFournisseur', False)
+    if (not nomFournisseur):
+        return JsonResponse({ "error" : "Missing nomFournisseur in query parameter"}, status=400)
+    if (not codeProduitFournisseur):
+        return JsonResponse({ "error" : "Missing codeProduitFournisseur in query parameter"}, status=400)
+    try:
+        produit = model_to_dict(Produit.objects.get(codeProduitFournisseur=codeProduitFournisseur, nomFournisseur=nomFournisseur))
+    except Produit.DoesNotExist:
+        return JsonResponse({'error': 'Produit inexistant'}, status=404)
+    else:
+        return JsonResponse({'produit' : {"codeProduit" : produit["codeProduit"],
+                                          "codeProduitFournisseur" : produit["codeProduitFournisseur"],
+                                          "nomFournisseur" : produit["nomFournisseur"],
+                                          "exclusivite" : produit["exclusivite"],
+                                          }})
+
 ### ASYNC MESSAGES ###
 def send_gesco_new_products(products):
     products["functionname"] = "catalogue-add-product"

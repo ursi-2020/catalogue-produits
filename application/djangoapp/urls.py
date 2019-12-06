@@ -24,6 +24,6 @@ urlpatterns = [
     path('api/get-magasin', views.api_get_magasin, name='api-get-magasin'),
     path('api/get-by-id/<str:code_produit>', views.api_get_by_id, name='api-get-by-id'),
     path('api/file/products', views.api_get_products_by_file, name='api-get-products-by-file'),
-    path('api/simulateur/get-all', views.api_simulateur_get_all, name='api-simulateur-get-all'),
+    path('api/simulateur/get-all-ecommerce', views.api_simulateur_get_all_ecommerce, name='api-simulateur-get-all-ecommerce'),
     path('api/simulateur/get-by-code', views.api_simulateur_get_by_code, name='api-simulateur-get-by-code')
 ]

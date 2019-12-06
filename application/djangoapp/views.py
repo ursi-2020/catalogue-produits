@@ -133,10 +133,10 @@ def api_get_products_by_file(request):
     return JsonResponse({'error': "Veuillez specifier votre nom d'application"}, status=400)
 
 ### SIMULATEUR API ###
-def api_simulateur_get_all(request):
+def api_simulateur_get_all_ecommerce(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed()
-    produits = list(Produit.objects.exclude(exclusivite__exact="magasin").values('codeProduit', 'codeProduitFournisseur', 'nomFournisseur', 'exclusivite'))
+    produits = list(Produit.objects.exclude(exclusivite__exact="magasin").values('codeProduit', 'codeProduitFournisseur', 'nomFournisseur'))
     return JsonResponse({ 'produits' : produits })
 
 def api_simulateur_get_by_code(request):

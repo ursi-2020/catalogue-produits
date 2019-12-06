@@ -231,13 +231,13 @@ Error if app is not registered
 ## Simulateur
 The following routes are designed to be called by the simulator
 
-### Get all products
+### Get all ecommerce products
 
 Get all the products registered in the catalogue db that ecommerce can sold.
 
 **Service name** : `catalogue-produit`
 
-**URL** : `api/simulateur/get-all`
+**URL** : `api/simulateur/get-all-ecommerce`
 
 **Method** : `GET`
 
@@ -255,26 +255,22 @@ Success
         {
             "codeProduit": "fo-X1-0",
             "codeProduitFournisseur": "X1-0",
-            "nomFournisseur": "fo",
-            "exclusivite": "ecommerce"
+            "nomFournisseur": "fo"
         },
         {
             "codeProduit": "fo-X1-1",
             "codeProduitFournisseur": "X1-1",
-            "nomFournisseur": "fo",
-            "exclusivite": ""
+            "nomFournisseur": "fo"
         },
         {
             "codeProduit": "fo-X1-2",
             "codeProduitFournisseur": "X1-2",
-            "nomFournisseur": "fo",
-            "exclusivite": ""
+            "nomFournisseur": "fo"
         },
         {
             "codeProduit": "fo-X1-3",
             "codeProduitFournisseur": "X1-3",
-            "nomFournisseur": "fo",
-            "exclusivite": "ecommerce"
+            "nomFournisseur": "fo"
         }
     ]
 }
@@ -283,7 +279,9 @@ Success
 
 Get a product registered in the catalogue db that matches the nomFournisseur and the codeProduitFournisseur given as parameters.
 
-If those parameters are not present, returns an error
+If those parameters are not present, returns an error.
+
+*NB: If the exclusivite field is empty, this product is available at both magasin and ecommerce*
 
 **Service name** : `catalogue-produit`
 

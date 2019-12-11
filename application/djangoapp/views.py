@@ -46,7 +46,8 @@ def load_data(request):
     for product in json_data["produits"]:
         # TODO: Ajouter le nom du fournisseur de manière dynamique
         nomFournisseur = "fo"
-        codeProduit = "%s-%s" % (nomFournisseur, product["codeProduit"])
+        #codeProduit = "%s-%s" % (nomFournisseur, product["codeProduit"])
+        codeProduit = product["codeProduit"]
         prix_fournisseur = product["prix"] * 100
         prix_vente = int(prix_fournisseur * 1.3)
         exclusivite = get_exclusivite()

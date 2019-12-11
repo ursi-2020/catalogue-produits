@@ -31,6 +31,7 @@ class ApplicationConfig(AppConfig):
             clock_time = api.send_request('scheduler', 'clock/time')
             time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
             time = time + timedelta(days=1)
+            # Clear Logs at init
             api.schedule_task('catalogue-produit','load-from-fournisseur', time, 'day', '{}', 'catalogue-produit','load_products_from_supplier')
 
             

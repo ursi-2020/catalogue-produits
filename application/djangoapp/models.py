@@ -12,6 +12,12 @@ class Produit(models.Model):
     prix = models.PositiveIntegerField()
     exclusivite = models.CharField(max_length=10)
 
+class Log(models.Model):
+    date = models.DateTimeField()
+    nbCreated = models.PositiveIntegerField(default=0)
+    nbDeleted = models.PositiveIntegerField(default=0)
+    nbModified = models.PositiveIntegerField(default=0)
+
 class Article(models.Model):
     nom = models.CharField(max_length=200)
     stock = models.PositiveIntegerField()

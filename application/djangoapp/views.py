@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 import json
 from datetime import datetime, timedelta
+from django.utils.dateparse import parse_datetime
 import requests
 import random
 import os
@@ -34,7 +35,13 @@ def index(request):
 
 def info(request):
     produits = Produit.objects.all()
-    context = {'produits' : produits}
+    try:
+        date_raw = Log.objects.latest('date').date
+        last_update = date_raw.strftime('"%d/%m/%Y"')
+        print(last_update)
+    except Log.DoesNotExist:
+        last_update = 'None'
+    context = {'produits' : produits, 'last_update' : last_update}
     return render(request, 'info.html', context)
 
 ### Data Loading and Clearing ###
@@ -43,6 +50,7 @@ def info(request):
 def load_data(request):
     json_data = json.loads(request.body)
     new_products = []
+    nbModified, nbCreated = (0, 0)
     for product in json_data["produits"]:
         # TODO: Ajouter le nom du fournisseur de manière dynamique
         nomFournisseur = "fo"
@@ -55,8 +63,16 @@ def load_data(request):
         new_product, created = Produit.objects.update_or_create(codeProduit=codeProduit, defaults=defaults)
         if created:
             new_products.append(model_to_dict(new_product))
+            nbCreated += 1
+        else:
+            nbModified += 1
     if len(new_products) > 0:
         send_gesco_new_products({ "produits" : new_products})
+    # LOG THE TRANSACTIONS
+    clock_time = api.send_request('scheduler', 'clock/time')
+    time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
+    new_log = Log(date=time, nbCreated=nbCreated, nbModified=nbModified)
+    new_log.save()
     ### Send catalogue as file to ecommerce
     send_catalogue_file('ecommerce')
     return HttpResponse(json.dumps(json_data))
@@ -80,6 +96,9 @@ def clear_data(request):
     deleted = Produit.objects.all().delete()
     return HttpResponseRedirect('info')
 
+def clear_logs(request):
+    deleted = Log.objects.all().delete()
+    return JsonResponse({ "result" : "OK"})
 ### API ###
 
 def api_get_all(request):

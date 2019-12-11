@@ -9,6 +9,7 @@ urlpatterns = [
     path('schedule-load-data', views.schedule_load_data, name='schedule-load-data'),
     path('automatic-load-data', views.automatic_load_data, name='automatic-load-data'),
     path('clear-data', views.clear_data, name='clear-data'),
+    path('clear-logs', views.clear_logs, name='clear-logs'),
     ## TESTS ROUTES ##
     path('load-from-fournisseur', views.load_from_fournisseur, name='load-from-fournisseur'),
 

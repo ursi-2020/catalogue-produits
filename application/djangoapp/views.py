@@ -10,6 +10,7 @@ from django.core import serializers
 from .models import Article
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
+from django.utils.timezone import make_aware
 import json
 from datetime import datetime, timedelta
 from django.utils.dateparse import parse_datetime
@@ -37,7 +38,7 @@ def info(request):
     produits = Produit.objects.all()
     try:
         date_raw = Log.objects.latest('date').date
-        last_update = date_raw.strftime('"%d/%m/%Y"')
+        last_update = date_raw.strftime('%d/%m/%Y')
         print(last_update)
     except Log.DoesNotExist:
         last_update = 'None'
@@ -69,13 +70,13 @@ def load_data(request):
     if len(new_products) > 0:
         send_gesco_new_products({ "produits" : new_products})
     # LOG THE TRANSACTIONS
-    clock_time = api.send_request('scheduler', 'clock/time')
-    time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
-    new_log = Log(date=time, nbCreated=nbCreated, nbModified=nbModified)
+    clock_time = api.send_request('scheduler', 'clock/time').strip('"')
+    time = datetime.strptime(clock_time, '%d/%m/%Y-%H:%M:%S')
+    new_log = Log(date=make_aware(time), nbCreated=nbCreated, nbModified=nbModified)
     new_log.save()
     ### Send catalogue as file to ecommerce
     send_catalogue_file('ecommerce')
-    return HttpResponse(json.dumps(json_data))
+    return JsonResponse(model_to_dict(new_log))
 
 @csrf_exempt
 def automatic_load_data(request):
@@ -231,9 +232,13 @@ def send_catalogue_file(destination_app):
 ### SIMULATEUR ###
 @csrf_exempt
 def load_from_fournisseur(request):
-    products = api.send_request('fo', 'products')
-    code = api.post_request('catalogue-produit', 'load-data', products)
-    return JsonResponse({"response" : code})
+    status_code, response = api.get_request('fo', 'products')
+    if status_code != 200:
+        return JsonResponse({"error" : response.text})
+    code, response2 = api.post_request2('catalogue-produit', 'load-data', json.dumps(response.json()))
+    if code != 200:
+        return JsonResponse({"error" : response.text})
+    return JsonResponse({ "response" : response2.json() })
 
 
 ### FILTERS ###

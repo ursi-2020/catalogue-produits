@@ -13,9 +13,10 @@ from application.djangoapp.models import *
 
 
 def test_mq(ch, method, properties, body):
-    j = json.loads(body)
-    if j['body']['functionname'] == 'catalogue-add-product':
-	    print(" [x] Received from queue %r" % body)
+    print("RECEIVE MSG FROM QUEUE")
+    #j = json.loads(body)
+    #if j['body']['functionname'] == 'catalogue-add-product':
+	    #print(" [x] Received from queue %r" % body)
 
 def main():
     queue.receive(os.environ['DJANGO_APP_NAME'], test_mq)

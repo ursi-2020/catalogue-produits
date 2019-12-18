@@ -226,7 +226,11 @@ def send_catalogue_file(destination_app):
                                                               'app': destination_app,
                                                               'path': '/mnt/technical_base/catalogue-produit/catalogue.json',
                                                               'name_file' : 'catalogue.json'})
-    print("Sent file to %s : %s" % (destination_app, r.text))
+    if r.status_code == 200:
+        print("Sent file to %s : %s" % (destination_app, r.text))
+        requests.post('http://127.0.0.1:5001/manage')
+    else:
+        print("Error when sending file to %s : %s" % (destination_app, r.text))
     return HttpResponse(r.text)     
 
 ### SIMULATEUR ###

@@ -59,8 +59,7 @@ def load_data(request):
         codeProduit = product["codeProduit"]
         prix_fournisseur = product["prix"] * 100
         prix_vente = int(prix_fournisseur * 1.3)
-        exclusivite = get_exclusivite()
-        defaults = {"codeProduitFournisseur": product["codeProduit"], "nomFournisseur": nomFournisseur, "familleProduit" : product["familleProduit"], "descriptionProduit" : product["descriptionProduit"], "quantiteMin" : product["quantiteMin"], "packaging" : product["packaging"], "prix" : prix_vente, "prixFournisseur" : prix_fournisseur, "exclusivite" : exclusivite}
+        defaults = {"codeProduitFournisseur": product["codeProduit"], "nomFournisseur": nomFournisseur, "familleProduit" : product["familleProduit"], "descriptionProduit" : product["descriptionProduit"], "quantiteMin" : product["quantiteMin"], "packaging" : product["packaging"], "prix" : prix_vente, "prixFournisseur" : prix_fournisseur}
         new_product, created = Produit.objects.update_or_create(codeProduit=codeProduit, defaults=defaults)
         if created:
             new_products.append(model_to_dict(new_product))
@@ -182,6 +181,7 @@ def api_simulateur_get_by_code(request):
 
 ### ASYNC MESSAGES ###
 def send_gesco_new_products(products):
+    print("Sending to gesco")
     products["functionname"] = "catalogue-add-product"
     to =  "gestion-commerciale"
     time = api.send_request('scheduler', 'clock/time')
@@ -250,14 +250,3 @@ def filter(query_set, familleProduit):
     if (familleProduit):
         query_set = query_set.filter(familleProduit__exact=familleProduit)
     return query_set
-
-### HELPERS ###
-def get_exclusivite():
-    val = random.random() * 100
-    if val < 25:
-        return 'ecommerce'
-    elif val < 50:
-        return 'magasin'
-    else:
-        return ''
-

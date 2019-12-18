@@ -1,5 +1,16 @@
 from django.db import models
 
+### HELPERS ###
+def get_exclusivite():
+    val = random.random() * 100
+    if val < 25:
+        return 'ecommerce'
+    elif val < 50:
+        return 'magasin'
+    else:
+        return ''
+
+
 class Produit(models.Model):
     codeProduit = models.CharField(max_length=200, primary_key=True)
     codeProduitFournisseur = models.CharField(max_length=200)
@@ -10,7 +21,7 @@ class Produit(models.Model):
     packaging = models.PositiveIntegerField()
     prixFournisseur = models.PositiveIntegerField()
     prix = models.PositiveIntegerField()
-    exclusivite = models.CharField(max_length=10)
+    exclusivite = models.CharField(max_length=10, default=get_exclusivite)
 
 class Log(models.Model):
     date = models.DateTimeField()

@@ -1,4 +1,5 @@
 from django.db import models
+import random
 
 ### HELPERS ###
 def get_exclusivite():

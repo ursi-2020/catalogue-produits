@@ -15,7 +15,6 @@ import json
 from datetime import datetime, timedelta
 from django.utils.dateparse import parse_datetime
 import requests
-import random
 import os
 
 ### IHM ###
@@ -35,11 +34,10 @@ def index(request):
 
 
 def info(request):
-    produits = Produit.objects.all()
+    produits = Produit.objects.all().order_by('codeProduit')
     try:
         date_raw = Log.objects.latest('date').date
         last_update = date_raw.strftime('%d/%m/%Y')
-        print(last_update)
     except Log.DoesNotExist:
         last_update = 'None'
     context = {'produits' : produits, 'last_update' : last_update}
@@ -66,7 +64,7 @@ def load_data(request):
             nbCreated += 1
         else:
             nbModified += 1
-    if len(new_products) > 0:
+    if nbCreated > 0:
         send_gesco_new_products({ "produits" : new_products})
     # LOG THE TRANSACTIONS
     clock_time = api.send_request('scheduler', 'clock/time').strip('"')

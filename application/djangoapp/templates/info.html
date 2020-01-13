@@ -46,6 +46,7 @@
             <th>Prix Fournisseur (en centimes)</th>
             <th>Prix de Vente (en centimes)</th>
             <th>Exclusivité</th>
+            <th>Date de création</th>
         </tr>
     </thead>
     {% for produit in produits %}
@@ -61,6 +62,7 @@
             <td>{{produit.prixFournisseur}}</td>
             <td>{{produit.prix}}</td>
             <td>{{produit.exclusivite}}</td>
+            <td>{{produit.dateCreation}}</td>
         </tr>
     </tbody>
     {% endfor %}

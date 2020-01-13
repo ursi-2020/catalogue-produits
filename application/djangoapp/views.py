@@ -7,6 +7,7 @@ from django.shortcuts import render
 from .forms import ArticleForm
 from django.http import JsonResponse
 from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 from .models import Article
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
@@ -50,6 +51,8 @@ def load_data(request):
     json_data = json.loads(request.body)
     new_products = []
     nbModified, nbCreated = (0, 0)
+    clock_time = api.send_request('scheduler', 'clock/time').strip('"')
+    time = datetime.strptime(clock_time, '%d/%m/%Y-%H:%M:%S')
     for product in json_data["produits"]:
         # TODO: Ajouter le nom du fournisseur de manière dynamique
         nomFournisseur = "fo"
@@ -58,7 +61,8 @@ def load_data(request):
         prix_fournisseur = product["prix"] * 100
         prix_vente = int(prix_fournisseur * 1.3)
         defaults = {"codeProduitFournisseur": product["codeProduit"], "nomFournisseur": nomFournisseur, "familleProduit" : product["familleProduit"], "descriptionProduit" : product["descriptionProduit"], "quantiteMin" : product["quantiteMin"], "packaging" : product["packaging"], "prix" : prix_vente, "prixFournisseur" : prix_fournisseur}
-        new_product, created = Produit.objects.update_or_create(codeProduit=codeProduit, defaults=defaults)
+        unchanged = { "dateCreation" : make_aware(time) }
+        new_product, created = my_update_or_create(codeProduit, defaults, unchanged)
         if created:
             new_products.append(model_to_dict(new_product))
             nbCreated += 1
@@ -67,8 +71,6 @@ def load_data(request):
     if nbCreated > 0:
         send_gesco_new_products({ "produits" : new_products})
     # LOG THE TRANSACTIONS
-    clock_time = api.send_request('scheduler', 'clock/time').strip('"')
-    time = datetime.strptime(clock_time, '%d/%m/%Y-%H:%M:%S')
     new_log = Log(date=make_aware(time), nbCreated=nbCreated, nbModified=nbModified)
     new_log.save()
     ### Send catalogue as file to ecommerce
@@ -179,19 +181,19 @@ def api_simulateur_get_by_code(request):
 
 ### ASYNC MESSAGES ###
 def send_gesco_new_products(products):
-    print("Sending to gesco")
+    #print("Sending to gesco")
     products["functionname"] = "catalogue-add-product"
     to =  "gestion-commerciale"
     time = api.send_request('scheduler', 'clock/time')
     message = { "from" : os.environ['DJANGO_APP_NAME'], "to" : to, "datetime" : time, "body" : products}
-    queue.send(to, json.dumps(message))
+    queue.send(to, json.dumps(message, cls=DjangoJSONEncoder))
     return
 
 ### ASYNC FILES ###
 @csrf_exempt
 def testfile(request):
     req_data = (request.POST)
-    print(req_data)
+    #print(req_data)
     return HttpResponse(200)
 
 def register(request):
@@ -218,17 +220,17 @@ def send_catalogue_file(destination_app):
             produits = produits.all()
         json_data = list(produits.values())
         json_data = {"produits" : json_data}
-        f.write(json.dumps(json_data))
+        f.write(json.dumps(json_data, cls=DjangoJSONEncoder))
     ## Send the catalogue to the app
     r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
                                                               'app': destination_app,
                                                               'path': '/mnt/technical_base/catalogue-produit/catalogue.json',
                                                               'name_file' : 'catalogue.json'})
     if r.status_code == 200:
-        print("Sent file to %s : %s" % (destination_app, r.text))
+        #print("Sent file to %s : %s" % (destination_app, r.text))
         requests.post('http://127.0.0.1:5001/manage')
-    else:
-        print("Error when sending file to %s : %s" % (destination_app, r.text))
+    #else:
+        #print("Error when sending file to %s : %s" % (destination_app, r.text))
     return HttpResponse(r.text)     
 
 ### SIMULATEUR ###
@@ -248,3 +250,19 @@ def filter(query_set, familleProduit):
     if (familleProduit):
         query_set = query_set.filter(familleProduit__exact=familleProduit)
     return query_set
+
+### HELPERS ###
+def my_update_or_create(codeProduit, defaults, unchanged):
+    try:
+        produit = Produit.objects.get(codeProduit=codeProduit)
+        for key, value in defaults.items():
+            setattr(produit, key, value)
+        produit.save()
+        return produit, False
+    except Produit.DoesNotExist:
+        new_values = {'codeProduit': codeProduit}
+        new_values.update(defaults)
+        new_values.update(unchanged)
+        produit = Produit(**new_values)
+        produit.save()
+        return produit, True

@@ -23,6 +23,7 @@ class Produit(models.Model):
     prixFournisseur = models.PositiveIntegerField()
     prix = models.PositiveIntegerField()
     exclusivite = models.CharField(max_length=10, default=get_exclusivite)
+    dateCreation = models.DateTimeField()
 
 class Log(models.Model):
     date = models.DateTimeField()

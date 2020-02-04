@@ -210,7 +210,7 @@ def write_catalogue_to_file(request):
     return send_catalogue_file('catalogue-produit')
 
 def send_catalogue_file(destination_app):
-    with open("catalogue.json", "w+") as f:
+    with open(os.path.join(os.getcwd(), "catalogue.json"), "w+") as f:
         produits = Produit.objects
         if destination_app == "ecommerce":
             produits = produits.exclude(exclusivite__exact="magasin")
@@ -224,11 +224,11 @@ def send_catalogue_file(destination_app):
     ## Send the catalogue to the app
     r = requests.post('http://127.0.0.1:5001/send', data={'me': os.environ['DJANGO_APP_NAME'],
                                                               'app': destination_app,
-                                                              'path': '/mnt/technical_base/catalogue-produit/catalogue.json',
+                                                              'path': os.path.join(os.getcwd(), "catalogue.json"),
                                                               'name_file' : 'catalogue.json'})
     if r.status_code == 200:
         #print("Sent file to %s : %s" % (destination_app, r.text))
-        requests.post('http://127.0.0.1:5001/manage')
+        r = requests.post('http://127.0.0.1:5001/manage')
     #else:
         #print("Error when sending file to %s : %s" % (destination_app, r.text))
     return HttpResponse(r.text)     

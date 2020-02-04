@@ -59,7 +59,7 @@ def load_data(request):
         #codeProduit = "%s-%s" % (nomFournisseur, product["codeProduit"])
         codeProduit = product["codeProduit"]
         prix_fournisseur = product["prix"] * 100
-        prix_vente = int(prix_fournisseur * 1.3)
+        prix_vente = int(prix_fournisseur * 1.5)
         defaults = {"codeProduitFournisseur": product["codeProduit"], "nomFournisseur": nomFournisseur, "familleProduit" : product["familleProduit"], "descriptionProduit" : product["descriptionProduit"], "quantiteMin" : product["quantiteMin"], "packaging" : product["packaging"], "prix" : prix_vente, "prixFournisseur" : prix_fournisseur}
         unchanged = { "dateCreation" : make_aware(time) }
         new_product, created = my_update_or_create(codeProduit, defaults, unchanged)
